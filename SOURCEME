@@ -15,8 +15,25 @@ if [ "x${myman_path}" = "x" ]; then
 fi
 
 
+export myman_functionsh_path="${myman_path}/lib/functionsh"
+
+
 # make sure we have the correct submodule(s)
-if [ ! -d "${myman_path}/lib/functionsh" ]; then
+if [ ! -d "${myman_functionsh_path}" ]; then
+    echo "\`myman\` is initializing submodules..."
+
+    cwd=$(pwd)
+    cd "${myman_path}"
+    [ ! -d "lib" ] && mkdir "lib"
+
     git submodule init
     git submodule update
+
+    cd "$cwd"
+fi
+
+
+# bring in functionsh
+if [ -f "${myman_functionsh_path}/SOURCEME" ]; then
+    source "${myman_functionsh_path}/SOURCEME"
 fi
