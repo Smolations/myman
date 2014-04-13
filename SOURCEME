@@ -1,0 +1,22 @@
+# get path to this script
+if [ "x${myman_path}" = "x" ]; then
+    # determine the path to this script. it will become the gitscripts path. the cfg directory
+    # must live in the same directory as this script for any user overrides to take effect.
+    myman_path="${BASH_SOURCE[0]}"
+    if [ -h "${myman_path}" ]; then
+        while [ -h "${myman_path}" ]; do
+            myman_path=`readlink "${myman_path}"`
+        done
+    fi
+    pushd . > /dev/null
+    cd `dirname ${myman_path}` > /dev/null
+    export myman_path=`pwd`;
+    popd  > /dev/null
+fi
+
+
+# make sure we have the correct submodule(s)
+if [ ! -d "${myman_path}/lib/functionsh" ]; then
+    git submodule init
+    git submodule update
+fi
