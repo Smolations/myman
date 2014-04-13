@@ -1,3 +1,6 @@
 [submodule "lib/functionsh"]
 	path = lib/functionsh
 	url = git@github.com:Smolations/functionsh.git
+[submodule "lib/__cfg"]
+	path = lib/__cfg
+	url = git@github.com:Smolations/__cfg.git

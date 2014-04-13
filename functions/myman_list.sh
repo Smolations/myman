@@ -15,9 +15,8 @@
 #
 #	@file gsman_list.sh
 ## */
-$loadfuncs
 
-
+function myman_list {
 flag="gs"
 if [ -n "$1" ]; then
 	[ "$1" = "all" ] && flag="all"
@@ -64,5 +63,5 @@ else
 	echo ${E}"  There was an error displaying the gsman commands. Exiting...  "${X}
 fi
 
-
-exit
+}
+export -f myman_list

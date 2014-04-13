@@ -1,4 +1,4 @@
-# get path to this script
+## get path to this script
 if [ "x${myman_path}" = "x" ]; then
     # determine the path to this script. it will become the gitscripts path. the cfg directory
     # must live in the same directory as this script for any user overrides to take effect.
@@ -14,26 +14,47 @@ if [ "x${myman_path}" = "x" ]; then
     popd  > /dev/null
 fi
 
+cwd=$(pwd)
+cd "$myman_path"
 
-export myman_functionsh_path="${myman_path}/lib/functionsh"
+export myman_lib_path="${myman_path}/lib"
+export myman_docs_path=~/".myman"
+
+## create necessary directories if they dont exist
+mm_paths=( "$myman_docs_path" "$myman_lib_path" )
+for mm_path in ${mm_paths[@]}; do
+    [ ! -d "$mm_path" ] && mkdir -p "$mm_path"
+done
 
 
-# make sure we have the correct submodule(s)
-if [ ! -d "${myman_functionsh_path}" ]; then
-    echo "\`myman\` is initializing submodules..."
+## make sure we have the correct submodule(s)
+submodules=( "__cfg" "functionsh" )
+for submodule in ${submodules[@]}; do
+    if [ ! -d "${myman_lib_path}/${submodule}" ]; then
+        echo "\`myman\` is initializing submodules..."
+        git submodule init
+        git submodule update
+        break;
+    fi
+done
 
-    cwd=$(pwd)
-    cd "${myman_path}"
-    [ ! -d "lib" ] && mkdir "lib"
 
-    git submodule init
-    git submodule update
+## bring in __cfg
+if [ -f "${myman_lib_path}/__cfg/SOURCEME" ]; then
+    source "${myman_lib_path}/__cfg/SOURCEME"
+fi
 
-    cd "$cwd"
+# initialize initial cfg entries
+if ! _cfg_exists; then
+    __cfg init
 fi
 
 
-# bring in functionsh
-if [ -f "${myman_functionsh_path}/SOURCEME" ]; then
-    source "${myman_functionsh_path}/SOURCEME"
+## bring in functionsh
+if [ -f "${myman_lib_path}/functionsh/SOURCEME" ]; then
+    source "${myman_lib_path}/functionsh/SOURCEME"
 fi
+
+__source_all "${myman_path}/functions"
+
+cd "$cwd"

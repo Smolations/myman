@@ -1,5 +1,4 @@
-#!/bin/bash
-## /*
+## /* @function
 #	@description
 #	This script is called when the --build-index option is passed to the
 #	gsman command. It cycles through all paths which have been specified
@@ -17,9 +16,10 @@
 #	- This script is not intended to be used on it's own.
 #	notes@
 #
-#	@file gsman_build_index.sh
+#	@file myman_build.sh
 ## */
 
+function myman_build {
 declare -a paths
 
 # user might want to build one of two indexes
@@ -101,4 +101,5 @@ done
 # clean up
 rm "$tmp"
 
-exit
+}
+export -f myman_build
