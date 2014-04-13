@@ -17,6 +17,7 @@ fi
 cwd=$(pwd)
 cd "$myman_path"
 
+export myman_awk_path="${myman_path}/awk"
 export myman_lib_path="${myman_path}/lib"
 export myman_docs_path=~/".myman"
 

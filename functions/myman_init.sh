@@ -96,7 +96,7 @@ function myman_init {
         return 4
     fi
 
-    myman_cfg "index.${indexName}.root" "$docsHome"
+    myman_cfg "index.${indexName}.src" "$indexPath"
 
     return 0
 }
