@@ -104,8 +104,6 @@ function myman_parse {
         echo
         cat "$docPath"
         echo
-        echo ${B}"-END-"${X}
-        echo
 
         exec 1>&4 4>&-
 

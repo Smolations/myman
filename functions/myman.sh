@@ -81,6 +81,9 @@ function myman {
                 "--list="*)
                     myman_list "${1:7}";;
 
+                "--add")
+                    myman_init;;
+
                 "--build")
                     myman_build;;
 
@@ -92,7 +95,7 @@ function myman {
             esac
             ;;
 
-        *)
+        0)
             myman_parse "myman";;
 
     esac

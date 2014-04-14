@@ -49,7 +49,6 @@ fi
 # initialize initial cfg entries
 if ! _cfg_exists; then
     __cfg init
-    __cfg "index.myman.src" "${myman_path}/functions"
 fi
 
 
@@ -63,7 +62,7 @@ __source_all "${myman_path}/functions"
 
 # build docs for myman if they dont exist
 if [ ! -d "${myman_docs_path}/myman" ]; then
-    myman_build myman
+    myman_init "myman" "functions" && myman_build myman
 fi
 
 cd "$cwd"

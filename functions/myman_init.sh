@@ -96,6 +96,8 @@ function myman_init {
 
     myman_cfg "index.${indexName}.src" "$indexPath"
 
+    myman_build "$indexName"
+
     return 0
 }
 export -f myman_init
