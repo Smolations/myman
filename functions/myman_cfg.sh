@@ -1,3 +1,26 @@
+## /* @function
+ #  @usage myman_cfg [-d|-r]
+ #  @usage myman_cfg [-r] <key>
+ #  @usage myman_cfg <key> <value>
+ #
+ #  @output true
+ #
+ #  @description
+ #  This script serves as proxy for setting myman's cfg. Since __cfg currently
+ #  relies on the current working directory in order to use its cfg, it is
+ #  necessary to switch to a valid directory before issuing commands. See the
+ #  documentation for __cfg for more information.
+ #  description@
+ #
+ #  @dependencies
+ #  `less`
+ #  `egrep`
+ #  __cfg/functions/__cfg.sh
+ #  dependencies@
+ #
+ #  @file myman_cfg.sh
+ ## */
+
 function myman_cfg {
     [ "$(pwd)" == "${myman_path}" ] && in_myman_path=true || in_myman_path=false
 

@@ -32,6 +32,7 @@
 #   notes@
 #
 #   @dependencies
+#   myman_cfg.sh
 #   dependencies@
 #
 #   @returns
@@ -41,7 +42,7 @@
 #   4 - could not create folder to contain docs
 #   returns@
 #
-#   @file myman_parse.sh
+#   @file myman_init.sh
 ## */
 
 function myman_init {
@@ -74,9 +75,6 @@ function myman_init {
             shift
             indexPath="$@"
     esac
-
-    # echo "indexName = ${indexName}"
-    # echo "indexPath = ${indexPath}"
 
     if [ ! -d "$indexPath" ]; then
         echo "${E}  Docs path does not exist: ${indexPath}  ${X}"

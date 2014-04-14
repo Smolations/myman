@@ -1,20 +1,30 @@
 ## /* @function
+#   @usage myman_build [<index-name>]
+#
+#   @output true
+#
 #   @description
 #   This script is called when the --build-index option is passed to the
 #   gsman command. It cycles through all paths which have been specified
 #   to have gcsommented files in them and creates the help files for those
 #   commands and adds them to an index which is easily parsed when a user
-#   runs "gsman <command>".
+#   runs "myman <command>".
 #   description@
 #
-#   @options
-#   user    Build only the user index
-#   main    Build only the main index
-#   options@
-#
 #   @notes
-#   - This script is not intended to be used on it's own.
+#   - This script is not intended to be used on its own.
 #   notes@
+#
+#   @dependencies
+#   `egrep`
+#   myman_cfg.sh
+#   myman_parse.awk
+#   dependencies@
+#
+#   @returns
+#   0 - successful execution of function
+#   1 - possible invalid index. docs path could not be found
+#   returns@
 #
 #   @file myman_build.sh
 ## */
@@ -52,12 +62,13 @@ function myman_build {
             docsPath="${myman_docs_path}/${indexName}"
         fi
 
+        echo "Building \`myman\` index for ${B}${COL_MAGENTA}${indexName}${X}"
+
         srcPath=$(myman_cfg "$key")
         manifest="${docsPath}/manifest"
         tmp="${docsPath}/tmp"
-        category=
-        # docPath="${docsPath}${category}"
-        # [ ! -d "$docPath" ] && mkdir "$docPath"
+
+        : > "$manifest"
 
         for file in "$srcPath"/*; do
             if [ ! -d "$file" ]; then
@@ -68,39 +79,53 @@ function myman_build {
                 docName=""
                 awk -f "${myman_awk_path}/myman_parse.awk" "$file" > "$tmp"
                 # subl "$tmp"
-                cat "$tmp"
-                break
-                while read line; do
-                    # first line -- type:...
-                    if [ $j -eq 0 ]; then
-                        docType="${line:5}"
-                        [ -z "$docType" ] && docType="main"
-                        if [ ! -d "${docPath}${docType}" ]; then
-                            mkdir "${docPath}${docType}"
+                # cat "$tmp"
+                # break
+
+                if grep -q '@usage' "$tmp"; then
+
+                    # added IFS= here to preserve the leading whitespace in the docs
+                    while IFS= read line; do
+
+                        # first line -- type:...
+                        if (( j == 0 )); then
+                            docType="${line:5}"
+                            [ -z "$docType" ] && docType="main"
+                            docPath="${docsPath}/${docType}"
+
+                            if [ ! -d "$docPath" ]; then
+                                mkdir -p "$docPath"
+                            fi
+
+                        # second line -- name:...
+                        elif (( j == 1 )); then
+                            docName="${line:5}"
+                            if [ -n "$docName" ] && [ "$docName" != "source" ]; then
+                                fileName="${docPath}/${docName}.txt"
+
+                                # relative file name. this is how gsman was originally
+                                # storing references to commands. manifest?
+                                rFileName="${fileName#${docsPath}/}"
+                                echo "${docName}:${rFileName}" >> "$manifest"
+                            else
+                                break
+                            fi
+
+                        # all other lines are the gsman comments
+                        elif [ -n "$rFileName" ]; then
+                            (( j == 2 )) && : > "$fileName"
+                            echo "$line" >> "$fileName"
                         fi
 
-                    # second line -- name:...
-                    elif [ $j -eq 1 ]; then
-                        docName="${line:5}"
-                        if [ -n "$docName" ] && [ "$docName" != "source" ]; then
-                            fileName="${docPath}${docType}/${docName}.txt"
-                            rFileName="${fileName#${gitscripts_path}}"
-                            echo "${docName}:${rFileName}" >> "$docIndex"
-                        else
-                            break
-                        fi
+                        (( j++ ))
 
-                    # all other lines are the gsman comments
-                    elif [ -n "$rFileName" ]; then
-                        [ $j -eq 2 ] && : > "$fileName"
-                        echo "$line" >> "$fileName"
+                    done < "$tmp"
 
-                    fi
-
-                    (( j++ ))
-                done <"$tmp"
+                else
+                    echo " ${COL_CYAN}@usage${X} missing for:  ${file}"
+                fi
             fi
-            break
+            # break
         done
 
         $justOne && break

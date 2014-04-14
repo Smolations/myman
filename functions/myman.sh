@@ -76,28 +76,24 @@ function myman {
         1)
             case "$1" in
                 "--list" | "-h" | "--help")
-                    "${gitscripts_path}"gsman_list.sh;;
+                    myman_list;;
 
-                "--list=user")
-                    "${gitscripts_path}"gsman_list.sh user;;
+                "--list="*)
+                    myman_list "${1:7}";;
 
-                "--list=all")
-                    "${gitscripts_path}"gsman_list.sh all;;
+                "--build")
+                    myman_build;;
 
-                "--build-index")
-                    "${gitscripts_path}"gsman_build_index.sh;;
-
-                "--build-index="*)
-                    "${gitscripts_path}"gsman_build_index.sh ${1:14};;
+                "--build="*)
+                    myman_build "${1:8}";;
 
                 *)
-                    "${gitscripts_path}"gsman_parse.sh "$1";;
+                    myman_parse "$1";;
             esac
             ;;
 
         *)
-            __bad_usage gsman
-            ;;
+            myman_parse "myman";;
 
     esac
 }

@@ -20,6 +20,7 @@ cd "$myman_path"
 export myman_awk_path="${myman_path}/awk"
 export myman_lib_path="${myman_path}/lib"
 export myman_docs_path=~/".myman"
+export myman_tmp="${myman_docs_path}/tmp"
 
 ## create necessary directories if they dont exist
 mm_paths=( "$myman_docs_path" "$myman_lib_path" )
@@ -48,6 +49,7 @@ fi
 # initialize initial cfg entries
 if ! _cfg_exists; then
     __cfg init
+    __cfg "index.myman.src" "${myman_path}/functions"
 fi
 
 
@@ -57,5 +59,11 @@ if [ -f "${myman_lib_path}/functionsh/SOURCEME" ]; then
 fi
 
 __source_all "${myman_path}/functions"
+
+
+# build docs for myman if they dont exist
+if [ ! -d "${myman_docs_path}/myman" ]; then
+    myman_build myman
+fi
 
 cd "$cwd"
