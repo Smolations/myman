@@ -20,8 +20,8 @@ Submodules
 
 `myman` uses some libraries to help out in scripts. Firstly, it implements colors from the [colorsh](https://github.com/Smolations/colorsh) project. However, the project is not a submodule because it is not absolutely necessary for `myman` to be functional. It just adds some style. The following submodules are _actual_ submodule dependencies:
 
-- (__cfg)[https://github.com/Smolations/__cfg] for app-specific settings
-- (functionsh)[https://github.com/Smolations/functionsh] for helper functions
+- [__cfg](https://github.com/Smolations/__cfg) for app-specific settings
+- [functionsh](https://github.com/Smolations/functionsh) for helper functions
 
 These submodules are checked for initialization every time the user opens a new CLI tab/window OR sources `~/.bashrc`.
 
