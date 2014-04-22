@@ -1,7 +1,7 @@
 myman
 =====
 
-A collection of scripts which allows users to maintain documentation for Bash scripts by establishing a comment syntax.
+A collection of Bash scripts which allows users to maintain documentation for their own scripts by establishing a comment syntax. While the tool is written in Bash, it can theoretically generate documentation for files of any non-binary file type.
 
 
 Dependencies
