@@ -22,6 +22,7 @@
  ## */
 
 function myman_cfg {
+    local in_myman_path
     [ "$(pwd)" == "${myman_path}" ] && in_myman_path=true || in_myman_path=false
 
     ! $in_myman_path && pushd "${myman_path}" &> /dev/null

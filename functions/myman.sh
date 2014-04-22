@@ -34,40 +34,39 @@
  #      @returns
  #      @file
  #
- #  `myman` leverages the `less` program to enable pagination just like `man`.
- #
+ #  `myman` leverages the `less` program to enable pagination just like `man`. So,
+ #  to exist the documentation, just press 'q'.
  #  description@
  #
  #  @options
- #  --build[=main|user]     Build the files which are used for outputting comments
- #                          in an easy-to-read format. Also build command index
- #                          files. If "user" is specified, only build the user
- #                          index/help.
- #  --list[=user|all),      Show a list of all the files which contain `myman` comments
- #                          and are accessible using the `myman` command. If "user" is
- #                          specified, only show commands that have been indexed from
- #                          paths set in the $gitscripts_paths_user variable. If "all" is
- #                          specified, show both user AND GitScripts native command lists.
- #  -h, --help              Same as --list.
+ #  --build[=<index-name>]  If no value is passed, `myman` will build all of the
+ #                          indexes it knows about. If an <index-name> is passed,
+ #                          only build the <index-name> index.
+ #  --list[=<index-name>]   If an <index-name> is passed, display all of the
+ #                          commands for that index which have `myman` comments.
+ #                          Otherwise, first show a list of the available indexes
+ #                          to choose from.
+ #  -h, --help              Same as `myman myman`.
  #  options@
  #
  #  @notes
- #  - The @usage tag MUST be included on the first line (under ## /*) for the
- #  comments to be available in `myman`!
+ #  - The @usage tag MUST be included on the first line under the comment
+ #  opening line (## /*) for the comments to be available via `myman`.
  #  - If an option is given, omit the keyword. Both should not be used
  #  simultaneously.
  #  notes@
  #
  #  @examples
- #  1) myman phone
- #  2) myman --help
- #  3) myman --list=all    # get a list of all commands
+ #  $ myman myCommand
+ #  $ myman --help
+ #  $ myman --list              # get a list of all indexes, then choose command
+ #  $ myman --build=myproject   # only build documentation for the "myproject" index
  #  examples@
  #
  #  @dependencies
- #  myman_build
- #  myman_list
- #  myman_parse
+ #  functions/myman_build.sh
+ #  functions/myman_list.sh
+ #  functions/myman_parse.sh
  #  dependencies@
  #
  #  @file functions/myman.sh

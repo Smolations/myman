@@ -36,10 +36,7 @@ function myman_parse {
 
     local cmd="$1" G=${COL_GREEN}
     local indexName docsPath key pair CATEGORY
-    declare -a paths
-    declare -a categories
-    declare -a docOptions
-    declare -a menuOpts
+    declare -a paths categories docOptions menuOpts
 
 
     # loop through each config line. if an index name was passed, skip

@@ -30,9 +30,10 @@ done
 
 
 ## make sure we have the correct submodule(s)
+echo "\`myman\` looking for submodules..."
 submodules=( "__cfg" "functionsh" )
 for submodule in ${submodules[@]}; do
-    if [ ! -d "${myman_lib_path}/${submodule}" ]; then
+    if [ ! -f "${myman_lib_path}/${submodule}/SOURCEME" ]; then
         echo "\`myman\` is initializing submodules..."
         git submodule init
         git submodule update
@@ -62,7 +63,7 @@ __source_all "${myman_path}/functions"
 
 # build docs for myman if they dont exist
 if [ ! -d "${myman_docs_path}/myman" ]; then
-    myman_init "myman" "functions" && myman_build myman
+    myman_init "myman" "functions" || echo "${E}  Could not build \`myman\` documentation!  ${X}"
 fi
 
 cd "$cwd"

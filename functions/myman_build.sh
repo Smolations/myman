@@ -18,7 +18,7 @@
  #  @dependencies
  #  `egrep`
  #  awk/myman_parse.awk
- #  myman_cfg
+ #  functions/myman_cfg.sh
  #  dependencies@
  #
  #  @returns

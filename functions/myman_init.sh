@@ -32,7 +32,8 @@
  #  notes@
  #
  #  @dependencies
- #  myman_cfg.sh
+ #  functions/myman_cfg.sh
+ #  functions/myman_build.sh
  #  dependencies@
  #
  #  @returns
