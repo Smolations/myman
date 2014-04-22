@@ -19,7 +19,7 @@
  #  @dependencies
  #  `less`
  #  `egrep`
- #  functionsh/functions/__menu.sh
+ #  lib/functionsh/functions/__menu.sh
  #  dependencies@
  #
  #  @returns
@@ -28,11 +28,10 @@
  #  2 - could not find document containing documentation (or user aborts)
  #  returns@
  #
- #  @file myman_parse.sh
+ #  @file functions/myman_parse.sh
  ## */
 
 function myman_parse {
-
     [ $# == 0 ] && return 1
 
     local cmd="$1" G=${COL_GREEN}
@@ -111,7 +110,7 @@ function myman_parse {
         rm -f "$myman_tmp"
 
     else
-        echo ${E}"  `myman` cannot find the documentation for this command.  "${X}
+        echo "${E}  `myman` cannot find the documentation for this command.  ${X}"
         return 2
     fi
 }

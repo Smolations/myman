@@ -15,10 +15,10 @@
  #  @dependencies
  #  `less`
  #  `egrep`
- #  __cfg/functions/__cfg.sh
+ #  lib/__cfg/functions/__cfg.sh
  #  dependencies@
  #
- #  @file myman_cfg.sh
+ #  @file functions/myman_cfg.sh
  ## */
 
 function myman_cfg {

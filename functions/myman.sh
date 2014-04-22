@@ -22,8 +22,8 @@
  #  comments in CSS and other web languages. Tag names begin with the "at" symbol (@)
  #  and are followed by one or more letters of the alphabet. Common tags used are:
  #
- #      @usage      << This tag MUST be on line 2 (or 3 if there's a shebang) after
- #                     the opening double-hash.
+ #      @usage      << This tag MUST be on the very next line after the opening
+ #                     double-hash.
  #      @output
  #      @exports
  #      @description
@@ -33,6 +33,9 @@
  #      @dependencies
  #      @returns
  #      @file
+ #
+ #  `myman` leverages the `less` program to enable pagination just like `man`.
+ #
  #  description@
  #
  #  @options
@@ -62,12 +65,12 @@
  #  examples@
  #
  #  @dependencies
- #  myman_build.sh
- #  myman_list.sh
- #  myman_parse.sh
+ #  myman_build
+ #  myman_list
+ #  myman_parse
  #  dependencies@
  #
- #  @file myman.sh
+ #  @file functions/myman.sh
  ## */
 
 function myman {
@@ -83,6 +86,9 @@ function myman {
 
                 "--add")
                     myman_init;;
+
+                "--refresh")
+                    __source_all "${myman_path}/functions" && echo "OK";;
 
                 "--build")
                     myman_build;;

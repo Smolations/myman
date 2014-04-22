@@ -1,33 +1,33 @@
 ## /* @function
-#   @usage myman_build [<index-name>]
-#
-#   @output true
-#
-#   @description
-#   This script is called when the --build-index option is passed to the
-#   gsman command. It cycles through all paths which have been specified
-#   to have gcsommented files in them and creates the help files for those
-#   commands and adds them to an index which is easily parsed when a user
-#   runs "myman <command>".
-#   description@
-#
-#   @notes
-#   - This script is not intended to be used on its own.
-#   notes@
-#
-#   @dependencies
-#   `egrep`
-#   myman_cfg.sh
-#   myman_parse.awk
-#   dependencies@
-#
-#   @returns
-#   0 - successful execution of function
-#   1 - possible invalid index. docs path could not be found
-#   returns@
-#
-#   @file myman_build.sh
-## */
+ #  @usage myman_build [<index-name>]
+ #
+ #  @output true
+ #
+ #  @description
+ #  This script is called when the --build-index option is passed to the
+ #  gsman command. It cycles through all paths which have been specified
+ #  to have gcsommented files in them and creates the help files for those
+ #  commands and adds them to an index which is easily parsed when a user
+ #  runs "myman <command>".
+ #  description@
+ #
+ #  @notes
+ #  - This function is intended to be used only by `myman`.
+ #  notes@
+ #
+ #  @dependencies
+ #  `egrep`
+ #  awk/myman_parse.awk
+ #  myman_cfg
+ #  dependencies@
+ #
+ #  @returns
+ #  0 - successful execution of function
+ #  1 - possible invalid index. docs path could not be found
+ #  returns@
+ #
+ #  @file functions/myman_build.sh
+ ## */
 
 function myman_build {
     local indexName docsPath key justOne=false
