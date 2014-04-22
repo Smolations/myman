@@ -31,8 +31,8 @@ Usage
 
 What better way to show how to use `myman` than to show the `myman` documentation for it! The documentation is a bit lengthy to get it all in a screenshot, so it is broken into two sections:
 
-h3. Usage and Description
+### Usage and Description
 ![Usage and Description](resources/usage-description.png "Usage and Description")
 
-h3. Options, Notes, and Examples
+### Options, Notes, and Examples
 ![Options, Notes, and Examples](resources/options-notes-examples.png "Options, Notes, and Examples")
