@@ -1,5 +1,10 @@
 ## /* @function
- #  @usage myman <[options] | [keyword]>
+ #  @usage myman --build[=<index-name>]
+ #  @usage myman --list[=<index-name>]
+ #  @usage myman [-h | --help]
+ #  @usage myman --add [<index-name>] [<src-path>]
+ #  @usage myman --refresh
+ #  @usage myman <command-name>
  #
  #  @description
  #  MyMan (My Manual) is to your scripts as the Man Pages are to Unix commands.
@@ -36,6 +41,12 @@
  #
  #  `myman` leverages the `less` program to enable pagination just like `man`. So,
  #  to exist the documentation, just press 'q'.
+ #
+ #  You can add documentation to `myman` in several ways. The only prerequisite is
+ #  that you pass the --add option to the `myman` command. See @options for syntax.
+ #  It should be noted that `myman` does not (yet) search paths recursively, so
+ #  you should specify ALL folders for which you desire documentation to be
+ #  generated.
  #  description@
  #
  #  @options
@@ -46,6 +57,13 @@
  #                          commands for that index which have `myman` comments.
  #                          Otherwise, first show a list of the available indexes
  #                          to choose from.
+ #
+ #  --add [<index-name>] [<index-path>] Without name/path, build all documentation
+ #                          for files in the current path. With ONLY the
+ #                          <index-name>, build docs for the current path and label
+ #                          the index with <index-name>. With all params specified,
+ #                          build the <index-name> index using files in the
+ #                          <index-path>.
  #  -h, --help              Same as `myman myman`.
  #  options@
  #
@@ -74,6 +92,25 @@
 
 function myman {
     case $# in
+        3)
+            case "$1" in
+                "--add")
+                    myman_init "$2" "$3";;
+
+                *)
+                    echo "${E}  \`myman\` did not understand the params specified.  ${X}"
+            esac
+            ;;
+
+        2)
+            case "$1" in
+                "--add")
+                    myman_init "$2";;
+
+                *)
+                    echo "${E}  \`myman\` did not understand the params specified.  ${X}"
+            esac
+            ;;
 
         1)
             case "$1" in

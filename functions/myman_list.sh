@@ -13,6 +13,7 @@
  #  notes@
  #
  #  @dependencies
+ #  functions/myman_parse.sh
  #  lib/functionsh/functions/__menu.sh
  #  dependencies@
  #
@@ -27,9 +28,7 @@
  ## */
 
 function myman_list {
-    declare -a manifests
-    declare -a indexes
-    declare -a cmds
+    declare -a manifests indexes cmds
     local indexName docsPath
 
     # 1st argument is the index (project) name
