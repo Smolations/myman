@@ -49,7 +49,7 @@ function myman_build {
         key=
         if [ -n "$indexName" ]; then
             key="index.${indexName}.src"
-            ! egrep -q "^${key}" <<< "$pair" && continue
+            ! egrep -q "^${key}=" <<< "$pair" && continue
             justOne=true
 
         else
@@ -72,17 +72,16 @@ function myman_build {
 
         for file in "$srcPath"/*; do
             if [ ! -d "$file" ]; then
-                # parse: /Users/smola/Workspaces/myman/functions/myman_cfg.sh
+                # parse (e.g.): /Users/smola/Workspaces/myman/functions/myman_cfg.sh
                 # echo "parse: $file"
                 j=0
                 docType=""
                 docName=""
                 awk -f "${myman_awk_path}/myman_parse.awk" "$file" > "$tmp"
-                # subl "$tmp"
-                # cat "$tmp"
-                # break
+                # subl "$tmp" && break
+                # cat "$tmp" && break
 
-                if grep -q '@usage' "$tmp"; then
+                if egrep -q '@usage' "$tmp"; then
 
                     # added IFS= here to preserve the leading whitespace in the docs
                     while IFS= read line; do
@@ -107,6 +106,7 @@ function myman_build {
                                 # storing references to commands. manifest?
                                 rFileName="${fileName#${docsPath}/}"
                                 echo "${docName}:${rFileName}" >> "$manifest"
+
                             else
                                 break
                             fi
@@ -128,94 +128,15 @@ function myman_build {
             # break
         done
 
-        $justOne && break
+        # clean up
+        indexName=
+        rm -f "$tmp" 2>/dev/null
+
+        [ "$justOne" == "true" ] && break
+
     done < "${myman_path}/.cfg/cfg.parsed"
 
-    # build the indexes for each path
-    # for path in ${paths[@]}; do
-    # done
 
-    return
-    #################################
-
-    # user might want to build one of two indexes
-    if [ -n "$1" ]; then
-        [ "$1" == "user" ] && paths[0]="${gsman_paths_user}" && userOnly=true
-        [ "$1" == "main" ] && paths[0]="${gsman_paths_default}" && mainOnly=true
-    fi
-
-    # if paths has an element, then the passed-in argument was validated.
-    # otherwise, build all by default.
-    if [ ${#paths[@]} -eq 0 ]; then
-        paths[0]="${gsman_paths_default}"
-        paths[1]="${gsman_paths_user}"
-    fi
-
-    docPath="${gitscripts_doc_path}"
-    tmp="${gitscripts_temp_path}gsmantemp"
-    [ ! -d "${gitscripts_temp_path}" ] && mkdir "${gitscripts_temp_path}"
-
-    echo ${X}
-    echo ${H1}${H1HL}
-    echo "  Beginning GSMan index build. Please wait...  "
-    echo ${H1HL}${X}
-    echo
-
-    for (( i = 0; i < ${#paths[@]}; i++ )); do
-        docPathPrefix=
-        { [ $userOnly ] || [ $i -eq 1 ]; } && docPathPrefix="user/"
-        docPath="${docPath}${docPathPrefix}"
-        [ ! -d "$docPath" ] && mkdir "$docPath"
-        docIndex="${docPath}gsman_index.txt"
-        : > "$docIndex"
-
-        for path in ${paths[i]}; do
-            echo "Indexing files in: $path"
-
-            for file in "$path"*; do
-                if [ ! -d "$file" ]; then
-                    j=0
-                    docType=""
-                    docName=""
-                    awk -f "${gitscripts_awk_path}gsman_parse.awk" "${file}" > "$tmp"
-                    while read line; do
-                        # first line -- type:...
-                        if [ $j -eq 0 ]; then
-                            docType="${line:5}"
-                            [ -z "$docType" ] && docType="main"
-                            if [ ! -d "${docPath}${docType}" ]; then
-                                mkdir "${docPath}${docType}"
-                            fi
-
-                        # second line -- name:...
-                        elif [ $j -eq 1 ]; then
-                            docName="${line:5}"
-                            if [ -n "$docName" ] && [ "$docName" != "source" ]; then
-                                fileName="${docPath}${docType}/${docName}.txt"
-                                rFileName="${fileName#${gitscripts_path}}"
-                                echo "${docName}:${rFileName}" >> "$docIndex"
-                            else
-                                break
-                            fi
-
-                        # all other lines are the gsman comments
-                        elif [ -n "$rFileName" ]; then
-                            [ $j -eq 2 ] && : > "$fileName"
-                            echo "$line" >> "$fileName"
-
-                        fi
-
-                        (( j++ ))
-                    done <"$tmp"
-                fi
-            done
-
-        done
-
-    done
-
-    # clean up
-    rm "$tmp"
-
+    return 0
 }
 export -f myman_build

@@ -30,13 +30,12 @@ done
 
 
 ## make sure we have the correct submodule(s)
-echo "\`myman\` looking for submodules..."
+# echo "\`myman\` looking for submodules..."
 submodules=( "__cfg" "functionsh" )
 for submodule in ${submodules[@]}; do
     if [ ! -f "${myman_lib_path}/${submodule}/SOURCEME" ]; then
         echo "\`myman\` is initializing submodules..."
-        git submodule init
-        git submodule update
+        git submodule update --init
         break;
     fi
 done
@@ -66,4 +65,10 @@ if [ ! -d "${myman_docs_path}/myman" ]; then
     myman_init "myman" "functions" || echo "${E}  Could not build \`myman\` documentation!  ${X}"
 fi
 
+# command completions
+# source "resources/myman.completion"
+
 cd "$cwd"
+
+
+echo "${B}${COL_MAGENTA}myman loaded.${X}"

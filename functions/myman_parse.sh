@@ -34,44 +34,37 @@
 function myman_parse {
     [ $# == 0 ] && return 1
 
-    local cmd="$1" G=${COL_GREEN}
-    local indexName docsPath key pair CATEGORY
-    declare -a paths categories docOptions menuOpts
+    local cmd="$1" G=${COL_GREEN} tmp=
+    local indexName docsPath docPath category ndx grepped menuOption manifest
+    declare -a paths categories menuOpts
 
 
     # loop through each config line. if an index name was passed, skip
     # all non-matching lines.
-    while read pair; do
-
-        key="${pair%%=*}"
-        ! egrep -q '^index\.[^.]+\.src$' <<< "$key" && continue
-
-        indexName="${key%.src}"
-        indexName="${indexName#index.}"
+    for indexName in `ls "$myman_docs_path"`; do
 
         docsPath="${myman_docs_path}/${indexName}"
         manifest="${docsPath}/manifest"
+        grepped=$( egrep "^${cmd}:" "$manifest" )
 
-        while read entry; do
-            if egrep -q "^${cmd}:" <<< "$entry"; then
-                docPath="${docsPath}/${entry#*:}"
-                if [ -s "$docPath" ]; then
-                    menuOption="${docPath#${myman_docs_path}/}"
-                    menuOption="${menuOption%/*}"
-                    menuOption=$(sed 's;/;:;g' <<< "$menuOption")
-                    category="${entry%%/*}"
-                    category="${category#*:}"
+        if [ -n "$grepped" ]; then
+            docPath="${docsPath}/${grepped#*:}"
+            if [ -s "$docPath" ]; then
+                menuOption="${docPath#${myman_docs_path}/}"
+                menuOption=$(sed 's;/;:;g' <<< "${menuOption%/*}")
+                category="${grepped%%/*}"
+                category="${category#*:}"
 
-                    menuOpts[${#menuOpts[@]}]="$menuOption"
-                    paths[${#paths[@]}]="$docPath"
-                    categories[${#categories[@]}]="$category"
-                fi
+                menuOpts[${#menuOpts[@]}]="$menuOption"
+                paths[${#paths[@]}]="$docPath"
+                categories[${#categories[@]}]="$category"
             fi
-        done < "$manifest"
+        fi
 
-    done < "${myman_path}/.cfg/cfg.parsed"
+    done
 
-
+    # if more than one index contains the same command, display a menu to choose.
+    # this should never happen.
     if [ ${#paths[@]} -gt 1 ]; then
         if __menu --prompt="More than one \`${indexName}\` found. Choose one" ${menuOpts[@]}; then
             if egrep -q '^[0-9]+$' <<< "$_menu_sel_index"; then
@@ -86,11 +79,12 @@ function myman_parse {
 
 
     # display documentation
+    tmp="${myman_tmp%/*}/${cmd}.mm"
     if [ -s "$docPath" ]; then
         # use file descriptors to send the "curried" document to
         # a temp file, then display the doc with `less`
         exec 4>&1
-        exec > "$myman_tmp"
+        exec > "$tmp"
 
         echo
         echo "${G}## /* ${X}"
@@ -103,8 +97,9 @@ function myman_parse {
 
         exec 1>&4 4>&-
 
-        less --force --RAW-CONTROL-CHARS "$myman_tmp"
-        rm -f "$myman_tmp"
+        # we pass options in order to get colors and whitespace to show
+        less --force --RAW-CONTROL-CHARS "$tmp"
+        rm -f "$tmp"
 
     else
         echo "${E}  `myman` cannot find the documentation for this command.  ${X}"
